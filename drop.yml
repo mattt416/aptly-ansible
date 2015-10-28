@@ -1,0 +1,29 @@
+---
+- hosts: all
+  vars:
+    distributions:
+      - trusty
+      - trusty-backports
+      - trusty-security
+      - trusty-updates
+    components:
+      - main
+      - restricted
+      - universe
+    date: "{{ ansible_date_time['year'] }}{{ ansible_date_time['month'] }}{{ ansible_date_time['day'] }}"
+  remote_user: root
+  tasks:
+    - name: Unpublish snapshots
+      command: aptly publish drop {{ item }} {{ date }}/ubuntu
+      with_items: distributions
+      when: tag is defined
+      tags:
+        - unpublish-snapshots
+    - name: Drop snapshots
+      command: aptly snapshot drop {{ date }}-{{ item[0] }}-{{ item[1] }}
+      with_nested:
+        - distributions
+        - components
+      when: tag is defined
+      tags:
+        - drop-snapshots
