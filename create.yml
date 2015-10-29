@@ -1,18 +1,10 @@
 ---
 - hosts: all
-  vars:
-    distributions:
-      - trusty
-      - trusty-backports
-      - trusty-security
-      - trusty-updates
-    components:
-      - main
-      - restricted
-      - universe
+  vars_files:
+    - vars_file.yml
   vars_prompt:
     - name: "gpg_passphrase"
-      prompt: "Enter passphrase"
+      prompt: "Enter GPG passphrase"
     - name: "tag"
       prompt: "Enter tag name"
       when: tag is not defined

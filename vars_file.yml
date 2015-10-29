@@ -1,0 +1,10 @@
+---
+distributions:
+  - trusty
+  - trusty-backports
+  - trusty-security
+  - trusty-updates
+components:
+  - main
+  - restricted
+  - universe

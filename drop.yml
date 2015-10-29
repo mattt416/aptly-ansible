@@ -1,15 +1,7 @@
 ---
 - hosts: all
-  vars:
-    distributions:
-      - trusty
-      - trusty-backports
-      - trusty-security
-      - trusty-updates
-    components:
-      - main
-      - restricted
-      - universe
+  vars_files:
+    - vars_file.yml
   vars_prompt:
     - name: "tag"
       prompt: "Enter tag name"
