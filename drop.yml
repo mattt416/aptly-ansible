@@ -10,6 +10,10 @@
       - main
       - restricted
       - universe
+  vars_prompt:
+    - name: "tag"
+      prompt: "Enter tag name"
+      when: tag is not defined
   remote_user: root
   tasks:
     - name: Unpublish snapshots

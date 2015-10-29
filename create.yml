@@ -10,10 +10,12 @@
       - main
       - restricted
       - universe
-    date: "{{ ansible_date_time['year'] }}{{ ansible_date_time['month'] }}{{ ansible_date_time['day'] }}"
   vars_prompt:
     - name: "gpg_passphrase"
       prompt: "Enter passphrase"
+    - name: "tag"
+      prompt: "Enter tag name"
+      when: tag is not defined
   remote_user: root
   tasks:
     - name: Refresh mirrors
@@ -24,14 +26,14 @@
       tags:
         - refresh-mirrors
     - name: Create new snapshots for tag
-      command: aptly snapshot create {{ item[0] }}-{{ item[1] }}-{{ date }} from mirror {{ item[0] }}-{{ item[1] }}
+      command: aptly snapshot create {{ item[0] }}-{{ item[1] }}-{{ tag }} from mirror {{ item[0] }}-{{ item[1] }}
       with_nested:
         - distributions
         - components
       tags:
         - create-snapshots
     - name: Publish snapshots for tag
-      command: aptly publish snapshot -passphrase="{{ gpg_passphrase }}" -component="{{ components|join(',') }}" -distribution="{{ item }}-{{ date }}" {% for c in components %}{{ item }}-{{c}}-{{ date }} {% endfor -%} ubuntu
+      command: aptly publish snapshot -passphrase="{{ gpg_passphrase }}" -component="{{ components|join(',') }}" -distribution="{{ item }}-{{ tag }}" {% for c in components %}{{ item }}-{{c}}-{{ tag }} {% endfor -%} ubuntu
       with_items: distributions
       tags:
         - publish-snapshots
