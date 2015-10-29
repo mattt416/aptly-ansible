@@ -1,0 +1,13 @@
+---
+- hosts: all
+  vars_files:
+    - vars_file.yml
+  remote_user: root
+  tasks:
+    - name: Refresh mirrors
+      command: aptly mirror update {{ item[0] }}-{{ item [1] }}
+      with_nested:
+        - distributions
+        - components
+      tags:
+        - refresh-mirrors

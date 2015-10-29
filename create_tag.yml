@@ -10,13 +10,6 @@
       when: tag is not defined
   remote_user: root
   tasks:
-    - name: Refresh mirrors
-      command: aptly mirror update {{ item[0] }}-{{ item [1] }}
-      with_nested:
-        - distributions
-        - components
-      tags:
-        - refresh-mirrors
     - name: Create new snapshots for tag
       command: aptly snapshot create {{ item[0] }}-{{ item[1] }}-{{ tag }} from mirror {{ item[0] }}-{{ item[1] }}
       with_nested:
